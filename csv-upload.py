@@ -11,14 +11,14 @@ settings.configure(INSTALLED_APPS=app_settings.INSTALLED_APPS,DATABASES=app_sett
 import django
 django.setup()
 
-from bank.models import Bank
+from bank.models import Branch
 
 with open('bank_branches.csv') as csvfile:
     data_set = csvfile.read()
     io_string = io.StringIO(data_set)
     next(io_string)
     for column in csv.reader(io_string, delimiter=',', quotechar='"'):
-        _, created = Bank.objects.update_or_create(
+        _, created = Branch.objects.update_or_create(
             IFSCCode=column[0],
             bank_id=column[1],
             branch=column[2],

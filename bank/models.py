@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 
-class Bank(models.Model):
+class Branch(models.Model):
     IFSCCode = models.CharField(
         max_length=11, unique=True, primary_key=True, null=False)
     bank_id = models.IntegerField()
@@ -16,4 +16,4 @@ class Bank(models.Model):
         max_length=50, verbose_name='bank-name')
 
     def __str__(self):
-        return self.bank_name
+        return self.bank_name + self.IFSCCode

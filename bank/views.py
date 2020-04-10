@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.generics import RetrieveAPIView, ListAPIView
-from .serializers import BankSerializer
-from .models import Bank
+from .serializers import BranchSerializer
+from .models import Branch
 
 
 class AllBranchesView(ListAPIView):
@@ -14,8 +14,8 @@ class AllBranchesView(ListAPIView):
     """
     Returns the details of every bank branch in the database.
     """
-    queryset = Bank.objects.all()
-    serializer_class = BankSerializer
+    queryset = Branch.objects.all()
+    serializer_class = BranchSerializer
     
 
 
@@ -27,15 +27,14 @@ class BranchDetailsView(RetrieveAPIView):
     """
 
     def get(self, request, code):
-        bank = get_object_or_404(Bank, IFSCCode__iexact=code)
-        serializer = BankSerializer(bank)
+        bank = get_object_or_404(Branch, IFSCCode__iexact=code)
+        serializer = BranchSerializer(bank)
         if serializer.is_valid:
             print(serializer.data)
             response={
-                "status": status.HTTP_200_OK,
-                "result" :serializer.data,
-                "message":"Successful"
-            }
+                "Successful": True,
+                "result":serializer.data,
+                }
             return Response(response, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
@@ -49,20 +48,18 @@ class CityBranchesView(RetrieveAPIView):
     """
     queryset = ''
     def get(self, request):
-        city = request.GET.get('city', '')
-        name = request.GET.get('name', '')
-        if city is not None:
-            banks = Bank.objects.filter(bank_name__iexact=name, city__iexact=city)
-            serializer = BankSerializer(banks, many=True)
-            print(serializer.data)
+        city = request.GET.get('city')
+        name = request.GET.get('name')
+        if city is not None and name is not None:
+            banks = Branch.objects.filter(bank_name__iexact=name, city__iexact=city)
+            serializer = BranchSerializer(banks, many=True)
             if serializer.is_valid:
                 response={
-                "status": status.HTTP_200_OK,
-                "result": serializer.data,
-                "message":"Successful"
+                "successful": True,
+                "result":serializer.data
                 }
                 return Response(response, status=status.HTTP_200_OK)
-            return Response("")    
-        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        return Response({"message":"Include query parameters, city& name"}, status=status.HTTP_404_NOT_FOUND)    
 
 
