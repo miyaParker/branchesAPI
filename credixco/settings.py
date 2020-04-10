@@ -21,7 +21,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'bank',
     'rest_framework',
-    'rest_framework_api_key',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
