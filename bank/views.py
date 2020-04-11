@@ -35,14 +35,13 @@ class BranchDetailsView(RetrieveAPIView):
                 "status": status_code,
                  "message": "Branch details  with IFSC code {} fetched successfully".format(code),
                 "result": serializer.data
-               
-            }
+            }   
         except Branch.DoesNotExist:
             status_code = status.HTTP_404_NOT_FOUND
             response = {
                 "success": "false",
                 "status": status_code,
-                "message": "A branch with that IFSC code does not exist",
+                "message": "A branch with that IFSC code {} does not exist".format(code),
             }
         return Response(response, status=status_code)
 
