@@ -29,15 +29,12 @@ class BranchDetailsView(RetrieveAPIView):
     def get(self, request, code):
         bank = get_object_or_404(Branch, IFSCCode__iexact=code)
         serializer = BranchSerializer(bank)
-        if serializer.is_valid:
-            print(serializer.data)
-            response={
+        response={
                 "Successful": True,
                 "result":serializer.data,
                 }
-            return Response(response, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
-
+        return Response(response, status=status.HTTP_200_OK)
+        
 
 class CityBranchesView(RetrieveAPIView):
     permission_classes =(AllowAny,)
@@ -53,13 +50,11 @@ class CityBranchesView(RetrieveAPIView):
         if city is not None and name is not None:
             banks = Branch.objects.filter(bank_name__iexact=name, city__iexact=city)
             serializer = BranchSerializer(banks, many=True)
-            if serializer.is_valid:
-                response={
+            response={
                 "successful": True,
                 "result":serializer.data
                 }
-                return Response(response, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+            return Response(response, status=status.HTTP_200_OK)
         return Response({"message":"Include query parameters, city& name"}, status=status.HTTP_404_NOT_FOUND)    
 
 
